@@ -1,5 +1,11 @@
 const express =require("express")
+                                          
+const connection = require("./database/connection")
+const User =require("./models/userModel.js")
+const Blog =require("./models/userBlog.js")
 const app = express()
+connection()
+ 
 
 
 
@@ -14,6 +20,19 @@ app.get("/about",function(req,res){
         age:18,
         name:"Suraj"
     })
+})
+app.get("/fetch-users",async function(req,res){
+    const data = await User.find()
+    res.json({
+        data :data
+    })
+})
+app.get("/fetch-blog",async function(req,res){
+    const data = await Blog.find()
+    res.json({
+        data:data
+    })
+
 })
 
 app.listen(3000,function(){
