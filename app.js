@@ -1,11 +1,15 @@
-const express =require("express")
+require("dotenv").config()  
+const express = require("express")
                                           
 const connection = require("./database/connection")
-const User =require("./models/userModel.js")
-const Blog =require("./models/userBlog.js")
+const User = require("./models/userModel.js")
+const Blog = require("./models/userBlog.js")
 const app = express()
 const bcrypt = require("bcrypt")
 connection()
+
+ 
+
 //req.body ko data show gardinxa postman ma nabhaye undefined dekhauxa
  app.use(express.json()) 
  
@@ -80,6 +84,22 @@ app.post("/blog",async function (req,res){
         message:"Details haruko lagi धन्यवाद!!"
     })
 })
+app.post("/update-user/:id", async function(req, res){
+    const id = req.params.id
+    const {name, email} = req.body
+    
+    // await User.findByIdAndUpdate(id, {
+    //     name: name,
+    //     email: email
+    // })
+    
+    res.json({
+        message: "User Updated Successfully!!"
+    })
+})
+//app.patch("/update-blog")
+
+
 app.delete("/delete-blog/:id",async function(req,res){
     const id = req.params.id
     await Blog.findByIdAndDelete(id)
@@ -98,4 +118,30 @@ app.get("/fetch-blog",async function(req,res){
 
 app.listen(3000,function(){
     console.log("Server has started at port 3000")
+})
+//login
+app.post("/login",async function(req,res){
+    const email = req.body.email
+    const password =req.body.password
+    
+    const data = await User.findOne({email: email})
+    if(!data){
+        res.json({
+            message:"Not registered!!"
+        })
+
+    }else{
+        const isMatched=bcrypt.compareSync(password,data.password)
+        if(isMatched){
+            res.json({
+                message:"Logged in success"
+            })
+
+        }else{
+            res.json({
+                message:"Invalid password"
+            })
+
+        }
+    }
 })
