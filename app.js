@@ -84,20 +84,32 @@ app.post("/blog",async function (req,res){
         message:"Details haruko lagi धन्यवाद!!"
     })
 })
-app.post("/update-user/:id", async function(req, res){
+app.patch("/update-user/:id", async function(req, res){
     const id = req.params.id
     const {name, email} = req.body
     
-    // await User.findByIdAndUpdate(id, {
-    //     name: name,
-    //     email: email
-    // })
+     await User.findByIdAndUpdate(id, {
+        name: name,
+        email: email
+     })
     
     res.json({
         message: "User Updated Successfully!!"
     })
 })
-//app.patch("/update-blog")
+app.patch("/update-blog/:id",async function(req,res){
+    const id = req.params.id
+    const{title,subtitle,description}=req.body
+    await Blog.findByIdAndUpdate(id,{
+        title:title,
+        subtitle:subtitle,
+        description:description
+    })
+    res.json({
+        message:"Blog updated successfully"
+    })
+
+})
 
 
 app.delete("/delete-blog/:id",async function(req,res){
